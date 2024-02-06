@@ -1,13 +1,16 @@
 #pragma once
+#include "candlestick.h"
 
 namespace CppCLRWinFormsProject {
 
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
+	using namespace System::Collections::Generic;
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Summary for Form1
@@ -36,13 +39,15 @@ namespace CppCLRWinFormsProject {
 		}
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialog1;
+	private: System::Windows::Forms::DataGridView^ dataGridViewCandlesticks;
+
 	protected:
 
 	private:
 		/// <summary>
 		/// Required designer variable.
 		/// </summary>
-		System::ComponentModel::Container ^components;
+		System::ComponentModel::Container^ components;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -53,11 +58,13 @@ namespace CppCLRWinFormsProject {
 		{
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->dataGridViewCandlesticks = (gcnew System::Windows::Forms::DataGridView());
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewCandlesticks))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button1
 			// 
-			this->button1->Location = System::Drawing::Point(79, 118);
+			this->button1->Location = System::Drawing::Point(268, 335);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(109, 48);
 			this->button1->TabIndex = 0;
@@ -68,21 +75,47 @@ namespace CppCLRWinFormsProject {
 			// openFileDialog1
 			// 
 			this->openFileDialog1->FileName = L"openFileDialog1";
+			this->openFileDialog1->FileOk += gcnew System::ComponentModel::CancelEventHandler(this, &Form1::openFileDialog1_FileOk);
+			// 
+			// dataGridViewCandlesticks
+			// 
+			this->dataGridViewCandlesticks->AllowUserToAddRows = false;
+			this->dataGridViewCandlesticks->AllowUserToDeleteRows = false;
+			this->dataGridViewCandlesticks->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridViewCandlesticks->Location = System::Drawing::Point(6, 2);
+			this->dataGridViewCandlesticks->Name = L"dataGridViewCandlesticks";
+			this->dataGridViewCandlesticks->ReadOnly = true;
+			this->dataGridViewCandlesticks->RowHeadersWidth = 51;
+			this->dataGridViewCandlesticks->RowTemplate->Height = 24;
+			this->dataGridViewCandlesticks->Size = System::Drawing::Size(704, 327);
+			this->dataGridViewCandlesticks->TabIndex = 1;
 			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(282, 253);
+			this->ClientSize = System::Drawing::Size(712, 447);
+			this->Controls->Add(this->dataGridViewCandlesticks);
 			this->Controls->Add(this->button1);
 			this->Name = L"Form1";
 			this->Text = L"Form1";
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridViewCandlesticks))->EndInit();
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
-	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		openFileDialog1->ShowDialog();
-	}
+		private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+			openFileDialog1->ShowDialog();
+		}
+		private: System::Void openFileDialog1_FileOk(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
+			String^ filePath = openFileDialog1->FileName;
+			ReadCandlestickData(filePath);
+		}
+
+		public:
+			List<candlestick^>^ listOfCandlesticks;
+			BindingList<candlestick^>^ BoundListOfCandlesticks;
+			List<candlestick^>^ ReadCandlestickData(String^ filePath);
+
 	};
-}
+};
