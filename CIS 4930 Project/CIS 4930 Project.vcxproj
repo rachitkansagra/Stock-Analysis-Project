@@ -131,7 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="candlestick.h" />
-    <ClInclude Include="Form1.h">
+    <ClInclude Include="Form_StockPicker.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="pch.h" />
@@ -141,7 +141,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="candlestick.cpp" />
     <ClCompile Include="CppCLR_WinFormsProject.cpp" />
-    <ClCompile Include="Form1.cpp" />
+    <ClCompile Include="Form_StockPicker.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -160,8 +160,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.h</DependentUpon>
+    <EmbeddedResource Include="Form_StockPicker.resx">
+      <DependentUpon>Form_StockPicker.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
