@@ -7,7 +7,7 @@ namespace CppCLRWinFormsProject {
 	List<candlestick^>^ Form_StockPicker::ReadCandlestickData(String^ filePath)
 	{
 
-		List<candlestick^>^ resultinglistOfCandlesticks = gcnew List<candlestick^>(1024);
+		List<candlestick^>^ resultingListOfCandlesticks = gcnew List<candlestick^>(1024);
 
 		if (File::Exists(filePath))
 		{
@@ -16,7 +16,7 @@ namespace CppCLRWinFormsProject {
 			while ((line = reader->ReadLine()) != nullptr)
 			{
 				candlestick^ singlecandlestick = gcnew candlestick(line);
-				resultinglistOfCandlesticks->Add(singlecandlestick);
+				resultingListOfCandlesticks->Add(singlecandlestick);
 			}
 			reader->Close();
 		}
@@ -25,7 +25,7 @@ namespace CppCLRWinFormsProject {
 			Console::WriteLine("File does not exist");
 		}
 
-		return resultinglistOfCandlesticks;
+		return resultingListOfCandlesticks;
 	}
 
 	BindingList<candlestick^>^ Form_StockPicker::FilterCandlestickData(List<candlestick^>^ loc)
