@@ -26,7 +26,10 @@
     <ClInclude Include="pch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Form1.h">
+    <ClInclude Include="Form_StockPicker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="candlestick.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -40,7 +43,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Form1.cpp">
+    <ClCompile Include="Form_StockPicker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="candlestick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
