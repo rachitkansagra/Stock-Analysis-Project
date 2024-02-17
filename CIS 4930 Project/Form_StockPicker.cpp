@@ -55,6 +55,11 @@ namespace CppCLRWinFormsProject {
 	// This function normalizes the candlestick chart based on the max high and min low values of the candlestick data.
 	void Form_StockPicker::NormalizeCandlestickChart(BindingList<candlestick^>^ bloc) {
 
+		if(bloc ->Count == 0) // If the binding list of candlesticks is empty, return.
+		{
+			return;
+		}
+
 		double maxHigh = bloc[0]->High; // Set the max high value to the first candlestick high value.
 		double minLow = bloc[0]->Low; // Set the min low value to the first candlestick low value.
 
