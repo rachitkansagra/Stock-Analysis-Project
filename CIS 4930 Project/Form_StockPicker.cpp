@@ -16,7 +16,7 @@ namespace CppCLRWinFormsProject {
 			String^ line = reader->ReadLine(); // Read the first line (header line) of the file.
 			while ((line = reader->ReadLine()) != nullptr) // Read the rest of the lines in the file until the end.
 			{
-				candlestick^ singlecandlestick = gcnew candlestick(line); // Create a new candlestick object from the line.
+				smartcandlestick^ singlecandlestick = gcnew smartcandlestick(line); // Create a new candlestick object from the line.
 				resultingListOfCandlesticks->Add(singlecandlestick); // Add the new candlestick object to the list.
 			}
 			reader->Close(); // Close the file.
@@ -85,7 +85,6 @@ namespace CppCLRWinFormsProject {
 
 	// This function displays the candlestick data in the data grid view and the chart.
 	void Form_StockPicker::DisplayCandlestickData() {
-		dataGridViewCandlesticks->DataSource = BoundListOfCandlesticks; // Set the data source of the data grid view to the binding list of candlestick objects.
 		chart_OHLCV->DataSource = BoundListOfCandlesticks; // Set the data source of the chart to the binding list of candlestick objects.
 		chart_OHLCV->DataBind(); // Bind the data to the chart.
 	}
@@ -113,18 +112,106 @@ namespace CppCLRWinFormsProject {
 
 	System::Void Form_StockPicker::openFileDialog_LoadStock_FileOk(System::Object^ sender, System::ComponentModel::CancelEventArgs^ e) {
 
-		ReadCandlestickData(); // Read candlestick data from a stock file.
-		FilterCandlestickData(); // Filter candlestick data based on the start and end date time pickers.
-		NormalizeCandlestickChart(); // Normalize the candlestick chart based on the max high and min low values of the candlestick data.
+		array<String^>^ FileNames = openFileDialog_LoadStock->FileNames;
+		String^ FirstFilePath = FileNames[0];
+		Text = Path::GetFileNameWithoutExtension(FirstFilePath); // Set the title of the form to the name of the stock file.
+
+		listOfCandlesticks = ReadCandlestickData(FirstFilePath);  // Read candlestick data from a stock file.
+		BoundListOfCandlesticks = FilterCandlestickData(listOfCandlesticks); // Filter candlestick data based on the start and end date time pickers.
+		NormalizeCandlestickChart(BoundListOfCandlesticks); // Normalize the candlestick chart based on the max high and min low values of the candlestick data.
 		DisplayCandlestickData(); // Display the candlestick data in the data grid view and the chart.
+		InializeComboBox(); // Initialize the combo box with the patterns.
+
+		for (int i = 1; i < FileNames->Length; i++) {
+
+			Form_StockPicker^ NewStockPickerForm = gcnew Form_StockPicker();
+			NewStockPickerForm->chart_OHLCV->Annotations->Clear();
+
+			String^ FilePath = FileNames[i];
+			NewStockPickerForm->Text = Path::GetFileNameWithoutExtension(FilePath);
+
+			NewStockPickerForm->listOfCandlesticks = NewStockPickerForm->ReadCandlestickData(FilePath);
+			NewStockPickerForm->BoundListOfCandlesticks = NewStockPickerForm->FilterCandlestickData(NewStockPickerForm->listOfCandlesticks);
+			NewStockPickerForm->NormalizeCandlestickChart(NewStockPickerForm->BoundListOfCandlesticks);
+			NewStockPickerForm->DisplayCandlestickData();
+			NewStockPickerForm->InializeComboBox();
+			NewStockPickerForm->Show();
+		}
 	}
 
 	System::Void Form_StockPicker::button_Update_Click(System::Object^ sender, System::EventArgs^ e) {
 		if (listOfCandlesticks != nullptr) // Check if the list of candlesticks is not null.
 		{
+			chart_OHLCV->Annotations->Clear(); // Clear the annotations in the chart.
+			comboBox_PatternSelector->Text = "";
 			FilterCandlestickData(); // Filter candlestick data based on the new start and end date time pickers.
 			NormalizeCandlestickChart(); // Normalize the candlestick chart based on the max high and min low values of the candlestick data.
 			DisplayCandlestickData(); // Display the candlestick data in the data grid view and the chart.
 		}
+	}
+
+	Void Form_StockPicker::InializeComboBox() {
+		comboBox_PatternSelector->Items->Clear(); // Clear the items in the combo box.
+
+		if (listOfCandlesticks != nullptr)
+		{
+			smartcandlestick^ scs = dynamic_cast<smartcandlestick^>(listOfCandlesticks[0]); // Get the first candlestick in the list as a smart candlestick.
+			for each (String^ pattern in scs->Patterns->Keys)
+			{
+				comboBox_PatternSelector->Items->Add(pattern); // Add the pattern to the combo box.
+			}
+		}
+		comboBox_PatternSelector->Text = "";
+	}
+
+	System::Void Form_StockPicker::comboBox_PatternSelector_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+
+		chart_OHLCV->Annotations->Clear(); // Clear the annotations in the chart.
+		List<int> recognizedIndexes;
+		String^ selectedPattern = comboBox_PatternSelector->SelectedItem->ToString();
+
+		for each (candlestick^ cs in BoundListOfCandlesticks)
+		{
+			smartcandlestick^ scs = dynamic_cast<smartcandlestick^>(cs);
+
+			if (scs->Patterns[selectedPattern])
+			{
+				recognizedIndexes.Add(BoundListOfCandlesticks->IndexOf(cs));
+			}
+		}
+
+		for each(int i in recognizedIndexes)
+		{
+			RectangleAnnotationFunc(i);
+		}
+	}
+
+	System::Void Form_StockPicker::RectangleAnnotationFunc(int Index)
+	{
+		System::Windows::Forms::DataVisualization::Charting::RectangleAnnotation^ rectangle = gcnew System::Windows::Forms::DataVisualization::Charting::RectangleAnnotation();
+		System::Windows::Forms::DataVisualization::Charting::DataPoint^ current = chart_OHLCV->Series[0]->Points[Index];
+		double minY = current->YValues[1];
+		double maxY = current->YValues[0];
+
+
+		//Customizing rectangle properties
+		rectangle->ClipToChartArea = "ChartArea_OHLC";
+		rectangle->AxisX = chart_OHLCV->ChartAreas["ChartArea_OHLC"]->AxisX;
+		rectangle->AxisY = chart_OHLCV->ChartAreas["ChartArea_OHLC"]->AxisY;
+		rectangle->IsSizeAlwaysRelative = false;
+
+		rectangle->BackColor = Color::FromArgb(100, Color::Blue);
+		rectangle->ForeColor = Color::Transparent;
+		rectangle->ShadowColor = Color::Transparent;
+
+		//Set width, X position, Y position and height of the rectangle annotation
+		rectangle->Width = 1;
+		rectangle->X = Index + 0.5;
+
+		rectangle->Y = maxY;
+		rectangle->Height = minY - maxY;
+
+		//Add the rectangle annotation to the chart
+		chart_OHLCV->Annotations->Add(rectangle);
 	}
 }
