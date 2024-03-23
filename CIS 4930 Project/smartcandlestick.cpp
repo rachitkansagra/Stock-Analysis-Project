@@ -5,32 +5,34 @@
 // Constructor for the smartcandlestick class
 smartcandlestick::smartcandlestick(String^ csvLine) : candlestick(csvLine)
 {
-	Patterns = gcnew Dictionary<String^, bool>();
-	ComputeHigherProperties();
-	ComputePatterns();
+	Patterns = gcnew Dictionary<String^, bool>(); // Initialize the patterns dictionary
+	ComputeHigherProperties(); // Compute the higher properties
+	ComputePatterns(); // Compute the patterns
 }
 
+// Method to compute the higher properties of the candlestick
 void smartcandlestick::ComputeHigherProperties()
 {
-	Range = High - Low;
-	BodyRange = Math::Abs(Open - Close);
-	TopPrice = Math::Max(Open, Close);
-	BottomPrice = Math::Min(Open, Close);
-	UpperTail = Math::Max(High - TopPrice, 0.0);
-	LowerTail = Math::Max(BottomPrice - Low, 0.0);
+	Range = High - Low; // Compute the range
+	BodyRange = Math::Abs(Open - Close); // Compute the body range
+	TopPrice = Math::Max(Open, Close); // Compute the top price
+	BottomPrice = Math::Min(Open, Close); // Compute the bottom price
+	UpperTail = Math::Max(High - TopPrice, 0.0); // Compute the upper tail
+	LowerTail = Math::Max(BottomPrice - Low, 0.0); // Compute the lower tail
 }
 
+// Method to get the patterns of the candlestick
 void smartcandlestick::ComputePatterns()
 {
-    Patterns->Add("Bullish", isBullishcs());
-    Patterns->Add("Bearish", isBearishcs());
-    Patterns->Add("Neutral", isNeutralcs());
-    Patterns->Add("Marubozu", isMarubozucs());
-    Patterns->Add("Doji", isDojics());
-    Patterns->Add("DragonFlyDoji", isDragonFlyDojics());
-    Patterns->Add("GraveStoneDoji", isGraveStoneDojics());
-    Patterns->Add("Hammer", isHammercs());
-    Patterns->Add("InvertedHammer", isInvertedHammercs());
+    Patterns->Add("Bullish", isBullishcs()); // Add the bullish pattern to the dictionary
+    Patterns->Add("Bearish", isBearishcs()); // Add the bearish pattern to the dictionary
+    Patterns->Add("Neutral", isNeutralcs()); // Add the neutral pattern to the dictionary
+    Patterns->Add("Marubozu", isMarubozucs()); // Add the marubozu pattern to the dictionary
+    Patterns->Add("Doji", isDojics()); // Add the doji pattern to the dictionary
+    Patterns->Add("DragonFlyDoji", isDragonFlyDojics()); // Add the dragonfly doji pattern to the dictionary
+    Patterns->Add("GraveStoneDoji", isGraveStoneDojics()); // Add the gravestone doji pattern to the dictionary
+    Patterns->Add("Hammer", isHammercs()); // Add the hammer pattern to the dictionary
+    Patterns->Add("InvertedHammer", isInvertedHammercs()); // Add the inverted hammer pattern to the dictionary
 }
 
 // Method to check if the candlestick is bullish

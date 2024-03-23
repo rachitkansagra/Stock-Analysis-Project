@@ -20,6 +20,7 @@ namespace CppCLRWinFormsProject {
 	{
 	private: List<candlestick^>^ listOfCandlesticks; // List of candlestick objects representing the stock data
 	private: BindingList<candlestick^>^ BoundListOfCandlesticks; // BindingList of candlestick objects representing the filtered stock data
+	private: String^ StockDataFilePath; // Filepath of the stock data file
 
 	private: System::Windows::Forms::DateTimePicker^ StartDateTimePicker; // DateTimePicker control to select the start date for the date range
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^ chart_OHLCV; // Chart control to display the candlestick chart
@@ -32,6 +33,10 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::ComboBox^ comboBox_PatternSelector;
 	private: System::Windows::Forms::Label^ Label_CandleStickPattern;
 	private: System::Windows::Forms::Label^ Label_DateRange;
+	private: System::Windows::Forms::Button^ button_clearPattern;
+	private: System::Windows::Forms::Label^ label_FormHeading;
+
+
 
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialog_LoadStock; // OpenFileDialog control to allow the user to select a stock file
 		   // DataGridView control to display the filtered candlestick data
@@ -70,10 +75,10 @@ namespace CppCLRWinFormsProject {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea1 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
-			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea2 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
-			System::Windows::Forms::DataVisualization::Charting::Series^ series1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
-			System::Windows::Forms::DataVisualization::Charting::Series^ series2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea11 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^ chartArea12 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series11 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Series^ series12 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
 			this->button_LoadStock = (gcnew System::Windows::Forms::Button());
 			this->openFileDialog_LoadStock = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->StartDateTimePicker = (gcnew System::Windows::Forms::DateTimePicker());
@@ -85,12 +90,13 @@ namespace CppCLRWinFormsProject {
 			this->comboBox_PatternSelector = (gcnew System::Windows::Forms::ComboBox());
 			this->Label_CandleStickPattern = (gcnew System::Windows::Forms::Label());
 			this->Label_DateRange = (gcnew System::Windows::Forms::Label());
+			this->button_clearPattern = (gcnew System::Windows::Forms::Button());
+			this->label_FormHeading = (gcnew System::Windows::Forms::Label());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->chart_OHLCV))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// button_LoadStock
 			// 
-			this->button_LoadStock->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 			this->button_LoadStock->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button_LoadStock->Location = System::Drawing::Point(138, 158);
@@ -110,16 +116,14 @@ namespace CppCLRWinFormsProject {
 			// 
 			// StartDateTimePicker
 			// 
-			this->StartDateTimePicker->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
 			this->StartDateTimePicker->Location = System::Drawing::Point(138, 60);
 			this->StartDateTimePicker->Name = L"StartDateTimePicker";
 			this->StartDateTimePicker->Size = System::Drawing::Size(354, 22);
 			this->StartDateTimePicker->TabIndex = 2;
-			this->StartDateTimePicker->Value = System::DateTime(2023, 7, 1, 0, 0, 0, 0);
+			this->StartDateTimePicker->Value = System::DateTime(2022, 1, 1, 0, 0, 0, 0);
 			// 
 			// EndDateTimePicker
 			// 
-			this->EndDateTimePicker->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
 			this->EndDateTimePicker->Location = System::Drawing::Point(138, 109);
 			this->EndDateTimePicker->Name = L"EndDateTimePicker";
 			this->EndDateTimePicker->Size = System::Drawing::Size(354, 22);
@@ -130,40 +134,39 @@ namespace CppCLRWinFormsProject {
 			this->chart_OHLCV->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
 				| System::Windows::Forms::AnchorStyles::Left)
 				| System::Windows::Forms::AnchorStyles::Right));
-			chartArea1->AlignWithChartArea = L"ChartArea_Volume";
-			chartArea1->AxisY->IsStartedFromZero = false;
-			chartArea1->Name = L"ChartArea_OHLC";
-			chartArea2->Name = L"ChartArea_Volume";
-			this->chart_OHLCV->ChartAreas->Add(chartArea1);
-			this->chart_OHLCV->ChartAreas->Add(chartArea2);
+			chartArea11->AlignWithChartArea = L"ChartArea_Volume";
+			chartArea11->AxisY->IsStartedFromZero = false;
+			chartArea11->Name = L"ChartArea_OHLC";
+			chartArea12->Name = L"ChartArea_Volume";
+			this->chart_OHLCV->ChartAreas->Add(chartArea11);
+			this->chart_OHLCV->ChartAreas->Add(chartArea12);
 			this->chart_OHLCV->Location = System::Drawing::Point(6, 212);
 			this->chart_OHLCV->Name = L"chart_OHLCV";
-			series1->ChartArea = L"ChartArea_OHLC";
-			series1->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Candlestick;
-			series1->CustomProperties = L"PriceDownColor=Red, PriceUpColor=Green";
-			series1->IsVisibleInLegend = false;
-			series1->IsXValueIndexed = true;
-			series1->LegendText = L"Stock Volume";
-			series1->Name = L"Series_OHLC";
-			series1->XValueMember = L"Date";
-			series1->XValueType = System::Windows::Forms::DataVisualization::Charting::ChartValueType::DateTime;
-			series1->YValueMembers = L"High, Low, Open, Close";
-			series1->YValuesPerPoint = 4;
-			series2->ChartArea = L"ChartArea_Volume";
-			series2->LegendText = L"Stock Volume";
-			series2->Name = L"Series_Volume";
-			series2->XValueMember = L"Date";
-			series2->XValueType = System::Windows::Forms::DataVisualization::Charting::ChartValueType::DateTime;
-			series2->YValueMembers = L"Volume";
-			this->chart_OHLCV->Series->Add(series1);
-			this->chart_OHLCV->Series->Add(series2);
+			series11->ChartArea = L"ChartArea_OHLC";
+			series11->ChartType = System::Windows::Forms::DataVisualization::Charting::SeriesChartType::Candlestick;
+			series11->CustomProperties = L"PriceDownColor=Red, PriceUpColor=Green";
+			series11->IsVisibleInLegend = false;
+			series11->IsXValueIndexed = true;
+			series11->LegendText = L"Stock Volume";
+			series11->Name = L"Series_OHLC";
+			series11->XValueMember = L"Date";
+			series11->XValueType = System::Windows::Forms::DataVisualization::Charting::ChartValueType::DateTime;
+			series11->YValueMembers = L"High, Low, Open, Close";
+			series11->YValuesPerPoint = 4;
+			series12->ChartArea = L"ChartArea_Volume";
+			series12->LegendText = L"Stock Volume";
+			series12->Name = L"Series_Volume";
+			series12->XValueMember = L"Date";
+			series12->XValueType = System::Windows::Forms::DataVisualization::Charting::ChartValueType::DateTime;
+			series12->YValueMembers = L"Volume";
+			this->chart_OHLCV->Series->Add(series11);
+			this->chart_OHLCV->Series->Add(series12);
 			this->chart_OHLCV->Size = System::Drawing::Size(1330, 523);
 			this->chart_OHLCV->TabIndex = 4;
 			this->chart_OHLCV->Text = L"chart1";
 			// 
 			// button_Update
 			// 
-			this->button_Update->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
 			this->button_Update->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button_Update->Location = System::Drawing::Point(332, 158);
@@ -198,6 +201,7 @@ namespace CppCLRWinFormsProject {
 			// 
 			// comboBox_PatternSelector
 			// 
+			this->comboBox_PatternSelector->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->comboBox_PatternSelector->FormattingEnabled = true;
 			this->comboBox_PatternSelector->Location = System::Drawing::Point(906, 62);
 			this->comboBox_PatternSelector->Name = L"comboBox_PatternSelector";
@@ -207,6 +211,7 @@ namespace CppCLRWinFormsProject {
 			// 
 			// Label_CandleStickPattern
 			// 
+			this->Label_CandleStickPattern->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->Label_CandleStickPattern->AutoSize = true;
 			this->Label_CandleStickPattern->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Underline)),
 				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
@@ -227,11 +232,39 @@ namespace CppCLRWinFormsProject {
 			this->Label_DateRange->TabIndex = 10;
 			this->Label_DateRange->Text = L"Date Range";
 			// 
+			// button_clearPattern
+			// 
+			this->button_clearPattern->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
+			this->button_clearPattern->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button_clearPattern->Location = System::Drawing::Point(906, 158);
+			this->button_clearPattern->Name = L"button_clearPattern";
+			this->button_clearPattern->Size = System::Drawing::Size(180, 48);
+			this->button_clearPattern->TabIndex = 11;
+			this->button_clearPattern->Text = L"Clear Pattern";
+			this->button_clearPattern->UseVisualStyleBackColor = true;
+			this->button_clearPattern->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &Form_StockPicker::button_clearPattern_MouseClick);
+			// 
+			// label_FormHeading
+			// 
+			this->label_FormHeading->Anchor = System::Windows::Forms::AnchorStyles::Top;
+			this->label_FormHeading->AutoSize = true;
+			this->label_FormHeading->Font = (gcnew System::Drawing::Font(L"Segoe UI Variable Display", 22.2F, static_cast<System::Drawing::FontStyle>((System::Drawing::FontStyle::Bold | System::Drawing::FontStyle::Underline)),
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(0)));
+			this->label_FormHeading->ForeColor = System::Drawing::Color::Purple;
+			this->label_FormHeading->Location = System::Drawing::Point(543, 33);
+			this->label_FormHeading->Name = L"label_FormHeading";
+			this->label_FormHeading->Size = System::Drawing::Size(273, 49);
+			this->label_FormHeading->TabIndex = 12;
+			this->label_FormHeading->Text = L"Stock Analysis";
+			// 
 			// Form_StockPicker
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1341, 737);
+			this->Controls->Add(this->label_FormHeading);
+			this->Controls->Add(this->button_clearPattern);
 			this->Controls->Add(this->Label_DateRange);
 			this->Controls->Add(this->Label_CandleStickPattern);
 			this->Controls->Add(this->comboBox_PatternSelector);
@@ -317,8 +350,34 @@ namespace CppCLRWinFormsProject {
 	/// <param name="e"></param>
 	/// <returns></returns>
 	private: System::Void button_Update_Click(System::Object^ sender, System::EventArgs^ e);
+
+	/// <summary>
+	/// Intializes the ComboBox control with the candlestick patterns.
+	/// </summary>
 	private: void InializeComboBox();
+
+	/// <summary>
+	/// Adds a RectangleAnnotation to the chart to highlight the candlestick pattern at the specified index.
+	/// </summary>
+	/// <param name="Index">: the index at which the annotation is represented</param>
 	private: void RectangleAnnotationFunc(int Index);
+
+	/// <summary>
+	/// Event handler for the SelectedIndexChanged event of the comboBox_PatternSelector control.
+	/// Changes the annotation on the chart based on the selected pattern.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	/// <returns></returns>
 	private: System::Void comboBox_PatternSelector_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e);
+	
+	/// <summary>
+	/// Event handler for the Click event of the button_clearPattern control.
+	/// Removes all the annotation from the chart.
+	/// </summary>
+	/// <param name="sender"></param>
+	/// <param name="e"></param>
+	/// <returns></returns>
+	private: System::Void button_clearPattern_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
 };
 };
