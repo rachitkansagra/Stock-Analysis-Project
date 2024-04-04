@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Form_StockPicker.h"
 #include "candlestick.h"
+#include "smartcandlestick.h"
 
 namespace CppCLRWinFormsProject {
 
@@ -30,11 +31,11 @@ namespace CppCLRWinFormsProject {
 	}
 
 	// This function filters a list of candlestick objects based on the start and end date time pickers.
-	BindingList<candlestick^>^ Form_StockPicker::FilterCandlestickData(List<candlestick^>^ loc)
+	BindingList<smartcandlestick^>^ Form_StockPicker::FilterCandlestickData(List<candlestick^>^ loc)
 	{
 		// Create a new list to store the resulting filtered candlestick objects.
-		List<candlestick^>^ TempListOfCandlesticks = gcnew List<candlestick^>();
-		for each (candlestick ^ candlestick in listOfCandlesticks) // Loop through each candlestick in the list.
+		List<smartcandlestick^>^ TempListOfCandlesticks = gcnew List<smartcandlestick^>();
+		for each (candlestick ^ candlestick in loc) // Loop through each candlestick in the list.
 		{
 			if (candlestick->Date > EndDateTimePicker->Value) // If the candlestick date is greater than the end date time picker value, break the loop.
 			{
@@ -43,17 +44,17 @@ namespace CppCLRWinFormsProject {
 
 			if (candlestick->Date >= StartDateTimePicker->Value && candlestick->Date <= EndDateTimePicker->Value)
 			{  // If the candlestick date is greater than or equal to the start date time picker value and less than or equal to the end date time picker value, add the candlestick to the list.
-				TempListOfCandlesticks->Add(candlestick);
+				TempListOfCandlesticks->Add(dynamic_cast<smartcandlestick^>(candlestick));
 			}
 		}
 
 		// Create a new binding list to store the resulting filtered candlestick objects.
-		BindingList<candlestick^>^ resultingBoundListOfCandlesticks = gcnew BindingList<candlestick^>(TempListOfCandlesticks);
+		BindingList<smartcandlestick^>^ resultingBoundListOfCandlesticks = gcnew BindingList<smartcandlestick^>(TempListOfCandlesticks);
 		return resultingBoundListOfCandlesticks; // Return the binding list of candlestick objects.
 	}
 
 	// This function normalizes the candlestick chart based on the max high and min low values of the candlestick data.
-	void Form_StockPicker::NormalizeCandlestickChart(BindingList<candlestick^>^ bloc) {
+	void Form_StockPicker::NormalizeCandlestickChart(BindingList<smartcandlestick^>^ bloc) {
 
 		if(bloc ->Count == 0) // If the binding list of candlesticks is empty, return.
 		{
@@ -153,14 +154,29 @@ namespace CppCLRWinFormsProject {
 	Void Form_StockPicker::InializeComboBox() {
 		comboBox_PatternSelector->Items->Clear(); // Clear the items in the combo box.
 
-		if (listOfCandlesticks != nullptr) // Check if the list of candlesticks is not null.
+		Recognizers = gcnew List<Recognizer^>();
+
+		Recognizers->Add(gcnew Recognizer_Bullish());
+		Recognizers->Add(gcnew Recognizer_Bearish());
+		Recognizers->Add(gcnew Recognizer_Neutral());
+		Recognizers->Add(gcnew Recognizer_Marubozu());
+		Recognizers->Add(gcnew Recognizer_Doji());
+		Recognizers->Add(gcnew Recognizer_DragonFlyDoji());
+		Recognizers->Add(gcnew Recognizer_GraveStoneDoji());
+		Recognizers->Add(gcnew Recognizer_Hammer());
+		Recognizers->Add(gcnew Recognizer_InvertedHammer());
+		Recognizers->Add(gcnew Recognizer_BullishEngulfing());
+		Recognizers->Add(gcnew Recognizer_BearishEngulfing());
+		Recognizers->Add(gcnew Recognizer_BullishHarami());
+		Recognizers->Add(gcnew Recognizer_BearishHarami());
+		Recognizers->Add(gcnew Recognizer_Peak());
+		Recognizers->Add(gcnew Recognizer_Valley());
+
+		for each (Recognizer^ recognizer in Recognizers)
 		{
-			smartcandlestick^ scs = dynamic_cast<smartcandlestick^>(listOfCandlesticks[0]); // Get the first candlestick in the list as a smart candlestick.
-			for each (String^ pattern in scs->Patterns->Keys)
-			{
-				comboBox_PatternSelector->Items->Add(pattern); // Add the pattern to the combo box.
-			}
+			comboBox_PatternSelector->Items->Add(recognizer->PatternName);
 		}
+
 		comboBox_PatternSelector->Text = ""; // Set empty text to the combo box.
 	}
 
@@ -168,30 +184,42 @@ namespace CppCLRWinFormsProject {
 
 		chart_OHLCV->Annotations->Clear(); // Clear the annotations in the chart.
 		List<int> recognizedIndexes; // Create a list to store the recognized indexes.
-		String^ selectedPattern = comboBox_PatternSelector->SelectedItem->ToString(); // Get the selected pattern from the combo box.
+		Recognizer^ selectedPatternRecognizer = Recognizers[comboBox_PatternSelector->SelectedIndex];
+		int selectedPatternPatternLength = selectedPatternRecognizer->PatternLength;
 
-		for each (candlestick^ cs in BoundListOfCandlesticks)
+		List<smartcandlestick^>^ lscs = gcnew List<smartcandlestick^>(BoundListOfCandlesticks->Count);
+		for each (smartcandlestick ^ scs in BoundListOfCandlesticks)
 		{
-			smartcandlestick^ scs = dynamic_cast<smartcandlestick^>(cs); // Get the candlestick as a smart candlestick.
+			lscs->Add(scs);
+		}
 
-			if (scs->Patterns[selectedPattern]) // Check if smart candlestick satisfies the selected pattern.
+		for (int i = selectedPatternPatternLength - 1; i < BoundListOfCandlesticks->Count; i++)
+		{
+			if (selectedPatternRecognizer->Recognize(lscs, i))
 			{
-				recognizedIndexes.Add(BoundListOfCandlesticks->IndexOf(cs)); // Add the index of the recognized candlestick to the list.
+				recognizedIndexes.Add(i);
 			}
 		}
 
 		for each(int i in recognizedIndexes)
 		{
-			RectangleAnnotationFunc(i); // Draw a rectangle annotation for each recognized candlestick.
+			RectangleAnnotationFunc(i, selectedPatternPatternLength); // Draw a rectangle annotation for each recognized candlestick.
 		}
 	}
 
-	System::Void Form_StockPicker::RectangleAnnotationFunc(int Index)
+	System::Void Form_StockPicker::RectangleAnnotationFunc(int EndIndex, int PatternLength)
 	{
 		System::Windows::Forms::DataVisualization::Charting::RectangleAnnotation^ rectangle = gcnew System::Windows::Forms::DataVisualization::Charting::RectangleAnnotation(); // Create a new rectangle annotation object.
-		System::Windows::Forms::DataVisualization::Charting::DataPoint^ current = chart_OHLCV->Series[0]->Points[Index]; // Get the current data point.
-		double minY = current->YValues[1]; // Get the minimum Y value.
-		double maxY = current->YValues[0]; // Get the maximum Y value.
+
+		double minY = double::MaxValue; // Set the minimum Y value to the maximum value of a double.
+		double maxY = double::MinValue; // Set the maximum Y value to the minimum value of a double;
+
+		for (int i = EndIndex; i >= EndIndex - PatternLength + 1; i--)
+		{
+			System::Windows::Forms::DataVisualization::Charting::DataPoint^ current = chart_OHLCV->Series[0]->Points[i];
+			minY = Math::Min(minY, current->YValues[1]);
+			maxY = Math::Max(maxY, current->YValues[0]);
+		}
 
 		rectangle->ClipToChartArea = "ChartArea_OHLC"; // Set the chart area for the rectangle annotation.
 		rectangle->AxisX = chart_OHLCV->ChartAreas["ChartArea_OHLC"]->AxisX; // Set the X axis for the rectangle annotation.
@@ -202,8 +230,8 @@ namespace CppCLRWinFormsProject {
 		rectangle->ForeColor = Color::Transparent; // Set the foreground color of the rectangle annotation.
 		rectangle->ShadowColor = Color::Transparent; // Set the shadow color of the rectangle annotation.
 
-		rectangle->Width = 1; // Set the width of the rectangle annotation.
-		rectangle->X = Index + 0.5; // Set the X value of the rectangle annotation.
+		rectangle->Width = PatternLength; // Set the width of the rectangle annotation.
+		rectangle->X = EndIndex - PatternLength + 1.5; // Set the X value of the rectangle annotation.
 		rectangle->Y = maxY; // Set the Y value of the rectangle annotation.
 		rectangle->Height = minY - maxY; // Set the height of the rectangle annotation.
 

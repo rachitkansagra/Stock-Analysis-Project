@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "smartcandlestick.h"
-#include "candlestick.h"
 
 // Constructor for the smartcandlestick class
 smartcandlestick::smartcandlestick(String^ csvLine) : candlestick(csvLine)

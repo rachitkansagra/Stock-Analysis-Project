@@ -1,6 +1,22 @@
 #pragma once
 #include "candlestick.h"
 #include "smartcandlestick.h"
+#include "Recognizer.h"
+#include "Recognizer_Bearish.h"
+#include "Recognizer_BearishEngulfing.h"
+#include "Recognizer_BearishHarami.h"
+#include "Recognizer_Bullish.h"
+#include "Recognizer_BullishEngulfing.h"
+#include "Recognizer_BullishHarami.h"
+#include "Recognizer_Doji.h"
+#include "Recognizer_DragonFlyDoji.h"
+#include "Recognizer_GraveStoneDoji.h"
+#include "Recognizer_Hammer.h"
+#include "Recognizer_InvertedHammer.h"
+#include "Recognizer_Marubozu.h"
+#include "Recognizer_Neutral.h"
+#include "Recognizer_Peak.h"
+#include "Recognizer_Valley.h"
 
 namespace CppCLRWinFormsProject {
 
@@ -19,8 +35,9 @@ namespace CppCLRWinFormsProject {
 	public ref class Form_StockPicker : public System::Windows::Forms::Form
 	{
 	private: List<candlestick^>^ listOfCandlesticks; // List of candlestick objects representing the stock data
-	private: BindingList<candlestick^>^ BoundListOfCandlesticks; // BindingList of candlestick objects representing the filtered stock data
+	private: BindingList<smartcandlestick^>^ BoundListOfCandlesticks; // BindingList of candlestick objects representing the filtered stock data
 	private: String^ StockDataFilePath; // Filepath of the stock data file
+	private: List<Recognizer^>^ Recognizers; // List of candlestick pattern recognizers
 
 	private: System::Windows::Forms::DateTimePicker^ StartDateTimePicker; // DateTimePicker control to select the start date for the date range
 	private: System::Windows::Forms::DataVisualization::Charting::Chart^ chart_OHLCV; // Chart control to display the candlestick chart
@@ -306,7 +323,7 @@ namespace CppCLRWinFormsProject {
 	/// </summary>
 	/// <param name="loc">:Complete list of candlestick</param>
 	/// <returns>A BindingList of candlestick objects representing the filtered data.</returns>
-	private: BindingList<candlestick^>^ FilterCandlestickData(List<candlestick^>^ loc);
+	private: BindingList<smartcandlestick^>^ FilterCandlestickData(List<candlestick^>^ loc);
 	
 	/// <summary>
 	///  Displays the filtered candlestick data in a DataGridView and a Chart.
@@ -322,7 +339,7 @@ namespace CppCLRWinFormsProject {
 	///  Normalizes the candlestick chart by adjusting the maximum and minimum values of the Y-axis
 	/// </summary>
 	/// <param name="bloc">:The BindingList of candlestick objects for which the chart is normalized</param>
-	private: void NormalizeCandlestickChart(BindingList<candlestick^>^ bloc);
+	private: void NormalizeCandlestickChart(BindingList<smartcandlestick^>^ bloc);
 
 	/// <summary>
 	/// Event handler for the Click event of the button_LoadStock control.
@@ -360,7 +377,7 @@ namespace CppCLRWinFormsProject {
 	/// Adds a RectangleAnnotation to the chart to highlight the candlestick pattern at the specified index.
 	/// </summary>
 	/// <param name="Index">: the index at which the annotation is represented</param>
-	private: void RectangleAnnotationFunc(int Index);
+	private: void RectangleAnnotationFunc(int EndIndex, int PatternLength);
 
 	/// <summary>
 	/// Event handler for the SelectedIndexChanged event of the comboBox_PatternSelector control.

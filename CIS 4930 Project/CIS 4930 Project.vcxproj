@@ -135,6 +135,22 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Recognizer.h" />
+    <ClInclude Include="Recognizer_Bearish.h" />
+    <ClInclude Include="Recognizer_BearishEngulfing.h" />
+    <ClInclude Include="Recognizer_BearishHarami.h" />
+    <ClInclude Include="Recognizer_Bullish.h" />
+    <ClInclude Include="Recognizer_BullishEngulfing.h" />
+    <ClInclude Include="Recognizer_BullishHarami.h" />
+    <ClInclude Include="Recognizer_Doji.h" />
+    <ClInclude Include="Recognizer_DragonFlyDoji.h" />
+    <ClInclude Include="Recognizer_GraveStoneDoji.h" />
+    <ClInclude Include="Recognizer_Hammer.h" />
+    <ClInclude Include="Recognizer_InvertedHammer.h" />
+    <ClInclude Include="Recognizer_Marubozu.h" />
+    <ClInclude Include="Recognizer_Neutral.h" />
+    <ClInclude Include="Recognizer_Peak.h" />
+    <ClInclude Include="Recognizer_Valley.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="smartcandlestick.h" />
   </ItemGroup>
@@ -149,6 +165,22 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Recognizer.cpp" />
+    <ClCompile Include="Recognizer_Bearish.cpp" />
+    <ClCompile Include="Recognizer_BearishEngulfing.cpp" />
+    <ClCompile Include="Recognizer_BearishHarami.cpp" />
+    <ClCompile Include="Recognizer_Bullish.cpp" />
+    <ClCompile Include="Recognizer_BullishEngulfing.cpp" />
+    <ClCompile Include="Recognizer_BullishHarami.cpp" />
+    <ClCompile Include="Recognizer_Doji.cpp" />
+    <ClCompile Include="Recognizer_DragonFlyDoji.cpp" />
+    <ClCompile Include="Recognizer_GraveStoneDoji.cpp" />
+    <ClCompile Include="Recognizer_Hammer.cpp" />
+    <ClCompile Include="Recognizer_InvertedHammer.cpp" />
+    <ClCompile Include="Recognizer_Marubozu.cpp" />
+    <ClCompile Include="Recognizer_Neutral.cpp" />
+    <ClCompile Include="Recognizer_Peak.cpp" />
+    <ClCompile Include="Recognizer_Valley.cpp" />
     <ClCompile Include="smartcandlestick.cpp" />
   </ItemGroup>
   <ItemGroup>
