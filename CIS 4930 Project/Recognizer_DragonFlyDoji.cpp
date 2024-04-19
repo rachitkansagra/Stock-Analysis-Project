@@ -8,5 +8,14 @@ Recognizer_DragonFlyDoji::Recognizer_DragonFlyDoji() : Recognizer("DragonFlyDoji
 bool Recognizer_DragonFlyDoji::Recognize(List<smartcandlestick^>^ lscs, int CurrentIndex)
 {
 	smartcandlestick^ scs = lscs[CurrentIndex];
-	return scs->Patterns[PatternName];
+
+	bool ReturnedValue;
+	if (scs->Patterns->TryGetValue(PatternName, ReturnedValue))
+	{
+		return ReturnedValue;
+	}
+	else
+	{
+		return (scs->BodyRange < (scs->dojiBuffer * scs->Open) && scs->UpperTail < (scs->dojiBuffer * scs->Range));
+	}
 }

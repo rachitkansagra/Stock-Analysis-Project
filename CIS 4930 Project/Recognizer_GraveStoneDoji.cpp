@@ -8,5 +8,14 @@ Recognizer_GraveStoneDoji::Recognizer_GraveStoneDoji() : Recognizer("GraveStoneD
 bool Recognizer_GraveStoneDoji::Recognize(List<smartcandlestick^>^ lscs, int CurrentIndex)
 {
 	smartcandlestick^ scs = lscs[CurrentIndex];
-	return scs->Patterns[PatternName];
+
+	bool ReturnedValue;
+	if (scs->Patterns->TryGetValue(PatternName, ReturnedValue))
+	{
+		return ReturnedValue;
+	}
+	else
+	{
+		return (scs->BodyRange < (scs->dojiBuffer * scs->Open) && scs->LowerTail < (scs->dojiBuffer * scs->Range));
+	}
 }

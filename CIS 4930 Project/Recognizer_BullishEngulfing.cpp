@@ -9,5 +9,14 @@ bool Recognizer_BullishEngulfing::Recognize(List<smartcandlestick^>^ lscs, int C
 {
 	smartcandlestick^ second_scs = lscs[CurrentIndex];
 	smartcandlestick^ first_scs = lscs[CurrentIndex - 1];
-	return (first_scs->Patterns["Bearish"] && second_scs->Patterns["Bullish"] && first_scs->High < second_scs->High && first_scs->Low > second_scs->Low);
+
+	bool ReturnedValue;
+	if (second_scs->Patterns->TryGetValue(PatternName, ReturnedValue))
+	{
+		return ReturnedValue;
+	}
+	else
+	{
+		return (first_scs->Patterns["Bearish"] && second_scs->Patterns["Bullish"] && first_scs->High < second_scs->High && first_scs->Low > second_scs->Low);
+	}
 }

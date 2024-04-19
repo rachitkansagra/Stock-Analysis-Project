@@ -8,5 +8,14 @@ Recognizer_InvertedHammer::Recognizer_InvertedHammer() : Recognizer("InvertedHam
 bool Recognizer_InvertedHammer::Recognize(List<smartcandlestick^>^ lscs, int CurrentIndex)
 {
 	smartcandlestick^ scs = lscs[CurrentIndex];
-	return scs->Patterns[PatternName];
+
+	bool ReturnedValue;
+	if (scs->Patterns->TryGetValue(PatternName, ReturnedValue))
+	{
+		return ReturnedValue;
+	}
+	else
+	{
+		return (scs->LowerTail < (0.1 * scs->Range) && scs->BodyRange >= (0.15 * scs->Range) && scs->BodyRange <= (0.35 * scs->Range));
+	}
 }

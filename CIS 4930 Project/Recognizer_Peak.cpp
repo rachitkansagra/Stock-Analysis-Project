@@ -10,5 +10,14 @@ bool Recognizer_Peak::Recognize(List<smartcandlestick^>^ lscs, int CurrentIndex)
 	smartcandlestick^ third_scs = lscs[CurrentIndex];
 	smartcandlestick^ second_scs = lscs[CurrentIndex - 1];
 	smartcandlestick^ first_scs = lscs[CurrentIndex - 2];
-	return (second_scs->High > first_scs->High && second_scs->High > third_scs->High);
+
+	bool ReturnedValue;
+	if (third_scs->Patterns->TryGetValue(PatternName, ReturnedValue))
+	{
+		return ReturnedValue;
+	}
+	else
+	{
+		return (second_scs->High > first_scs->High && second_scs->High > third_scs->High);
+	}
 }

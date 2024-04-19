@@ -17,14 +17,18 @@ public:
 
 	static double dojiBuffer = 0.02; // Buffer for the doji pattern
 
-	smartcandlestick(String^ csvLine); // Constructor to create a smart candlestick from a CSV line
+	/// <summary>
+	/// Constructor for the smartcandlestick class
+	/// </summary>
+	/// <param name="csvLine">: A single line from a CSV file</param>
+	smartcandlestick(String^ csvLine);
 
 	/// <summary>
 	/// Method to compute the higher properties of the candlestick
 	/// </summary>
 	void ComputeHigherProperties();
 
-	/// <summary>
+	/*/// <summary>
 	/// Method to compute the patterns of the candlestick
 	/// </summary>
 	void ComputePatterns();
@@ -81,5 +85,5 @@ public:
 	/// Method to check if the candlestick is an inverted hammer
 	/// </summary>
 	/// <returns> A boolean value indicating if the candlestick is an inverted hammer </returns>
-	bool isInvertedHammercs();
+	bool isInvertedHammercs();*/
 };

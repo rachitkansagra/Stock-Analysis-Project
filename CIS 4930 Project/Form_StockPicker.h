@@ -34,7 +34,7 @@ namespace CppCLRWinFormsProject {
 	/// </summary>
 	public ref class Form_StockPicker : public System::Windows::Forms::Form
 	{
-	private: List<candlestick^>^ listOfCandlesticks; // List of candlestick objects representing the stock data
+	private: List<smartcandlestick^>^ listOfCandlesticks; // List of candlestick objects representing the stock data
 	private: BindingList<smartcandlestick^>^ BoundListOfCandlesticks; // BindingList of candlestick objects representing the filtered stock data
 	private: String^ StockDataFilePath; // Filepath of the stock data file
 	private: List<Recognizer^>^ Recognizers; // List of candlestick pattern recognizers
@@ -45,18 +45,15 @@ namespace CppCLRWinFormsProject {
 
 	private: System::Windows::Forms::Button^ button_LoadStock; // Button control to load stock data from a file
 	private: System::Windows::Forms::Button^ button_Update; // Button control to update the stock data based on the new date range specified by the user
-	private: System::Windows::Forms::Label^ labelStartDate;
-	private: System::Windows::Forms::Label^ labelEndDate;
-	private: System::Windows::Forms::ComboBox^ comboBox_PatternSelector;
-	private: System::Windows::Forms::Label^ Label_CandleStickPattern;
-	private: System::Windows::Forms::Label^ Label_DateRange;
-	private: System::Windows::Forms::Button^ button_clearPattern;
-	private: System::Windows::Forms::Label^ label_FormHeading;
-
-
+	private: System::Windows::Forms::Label^ labelStartDate; // Label control to display the text "Start Date:"
+	private: System::Windows::Forms::Label^ labelEndDate; // Label control to display the text "End Date:"
+	private: System::Windows::Forms::ComboBox^ comboBox_PatternSelector; // ComboBox control to select the candlestick pattern to display
+	private: System::Windows::Forms::Label^ Label_CandleStickPattern; // Label control to display the text "CandleStick Pattern"
+	private: System::Windows::Forms::Label^ Label_DateRange; // Label control to display the text "Date Range"
+	private: System::Windows::Forms::Button^ button_clearPattern; // Button control to clear the candlestick pattern annotation from the chart
+	private: System::Windows::Forms::Label^ label_FormHeading; // Label control to display the form heading
 
 	private: System::Windows::Forms::OpenFileDialog^ openFileDialog_LoadStock; // OpenFileDialog control to allow the user to select a stock file
-		   // DataGridView control to display the filtered candlestick data
 
 	public:
 		Form_StockPicker(void)
@@ -311,7 +308,7 @@ namespace CppCLRWinFormsProject {
 	/// </summary>
 	/// <param name="filePath">:Stock data filepath</param>
 	/// <returns>List of candlestick objects</returns>
-	private: List<candlestick^>^ ReadCandlestickData(String^ filePath);
+	private: List<smartcandlestick^>^ ReadCandlestickData(String^ filePath);
 
 	/// <summary>
 	/// Overloaded method to filter list of candlestick based on the date range specified by the user
@@ -323,7 +320,7 @@ namespace CppCLRWinFormsProject {
 	/// </summary>
 	/// <param name="loc">:Complete list of candlestick</param>
 	/// <returns>A BindingList of candlestick objects representing the filtered data.</returns>
-	private: BindingList<smartcandlestick^>^ FilterCandlestickData(List<candlestick^>^ loc);
+	private: BindingList<smartcandlestick^>^ FilterCandlestickData(List<smartcandlestick^>^ loc);
 	
 	/// <summary>
 	///  Displays the filtered candlestick data in a DataGridView and a Chart.

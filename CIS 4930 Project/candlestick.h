@@ -13,6 +13,10 @@ public:
 	property double Close; // The closing price of the candlestick
 	property unsigned long long Volume; // The volume of the candlestick
 	
-	candlestick(String^ csvLine); // Constructor to create a candlestick from a CSV line
+	/// <summary>
+	/// Constructor for the candlestick class
+	/// </summary>
+	/// <param name="csvLine">: A single line from a CSV file</param>
+	candlestick(String^ csvLine);
 };
 
