@@ -188,24 +188,8 @@ namespace CppCLRWinFormsProject {
 	System::Void Form_StockPicker::comboBox_PatternSelector_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
 
 		chart_OHLCV->Annotations->Clear(); // Clear the annotations in the chart.
-		//List<int>^ recognizedIndexes; // Create a list to store the recognized indexes.
 		Recognizer^ selectedPatternRecognizer = Recognizers[comboBox_PatternSelector->SelectedIndex]; // Get the selected pattern recognizer.
 		int selectedPatternPatternLength = selectedPatternRecognizer->PatternLength; // Get the selected recognizer pattern length.
-		//List<smartcandlestick^>^ lscs = gcnew List<smartcandlestick^>(BoundListOfCandlesticks);
-
-		/*List<smartcandlestick^>^ lscs = gcnew List<smartcandlestick^>(BoundListOfCandlesticks->Count);
-		for each (smartcandlestick ^ scs in BoundListOfCandlesticks)
-		{
-			lscs->Add(scs);
-		}*/
-
-		/*for (int i = selectedPatternPatternLength - 1; i < BoundListOfCandlesticks->Count; i++)
-		{
-			if (selectedPatternRecognizer->Recognize(lscs, i))
-			{
-				recognizedIndexes.Add(i);
-			}
-		}*/
 
 		// Loop through each candlestick in the Bound List of Candlesticks.
 		for (int i = selectedPatternPatternLength - 1; i < BoundListOfCandlesticks->Count; i++)

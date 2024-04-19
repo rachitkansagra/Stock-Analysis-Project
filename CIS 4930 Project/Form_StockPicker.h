@@ -393,5 +393,5 @@ namespace CppCLRWinFormsProject {
 	/// <param name="e"></param>
 	/// <returns></returns>
 	private: System::Void button_clearPattern_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e);
-};
+	};
 };
